@@ -5,7 +5,7 @@
 <div>
   <h1>Store API (Nest JS) </h1>
 
-  <h3>Api criada para fins de estudo</h3>
+  <h3>Api sendo criada para fins de estudo</h3>
   
   <br>
   
