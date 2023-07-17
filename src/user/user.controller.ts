@@ -4,8 +4,8 @@ import { UserRepository } from "./user.repository";
 @Controller('/users')
 export class UserController {
 
-   // repository é responsável por lidar com o acesso e a persistência dos dados
-  private userRepository = new UserRepository(); 
+  // repository é responsável por lidar com o acesso e a persistência dos dados
+  constructor(private userRepository: UserRepository) {}
 
   /**
    * Realiza a criação de um novo usuário
