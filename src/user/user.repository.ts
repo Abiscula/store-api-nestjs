@@ -19,4 +19,14 @@ export class UserRepository {
   async list() {
     return this.users;
   }
+  
+  /**
+   * Verifica se o usuário já existe no banco de dados
+   * @param email: email que será verificado
+   * @returns true ou false
+   */
+  findUserByEmail(email: string): boolean {
+    const hasUser = this.users.findIndex(user => user.email === email)
+    return hasUser !== -1;
+  }
 }
