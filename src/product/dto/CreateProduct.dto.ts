@@ -1,7 +1,10 @@
-import { IsDateString, IsNotEmpty, MinLength, IsNumber, IsArray, isString, IsString } from "class-validator";
+import { IsDateString, IsNotEmpty, MinLength, IsNumber, IsArray, isString, IsString, IsUUID } from "class-validator";
 
 
 export class CreateProductDTO {
+
+  @IsUUID(undefined, { message: 'ID de usuário inválido' })
+  usuarioId: string;
 
   @IsNotEmpty({ message: 'Nome não pode ser vazio' })  
   nome: string;
