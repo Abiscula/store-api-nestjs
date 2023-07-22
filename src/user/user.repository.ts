@@ -20,6 +20,30 @@ export class UserRepository {
   async list() {
     return this.users;
   }
+
+  /**
+   * Partial<userEntity>: Permite somente alguns dados da entidade (transforma os valores da entidade em opcionais)
+   * 
+   * @param id: id do usuário
+   * @param data: dados para atualização
+   */
+  async update(id: string, newUserData: Partial<UserEntity>) {
+    const userExists = this.users.find(
+      savedUser => savedUser.id === id
+    );
+    if(!userExists) {
+      throw new Error('Usuário não encontrado')
+    }
+
+    Object.entries(newUserData).forEach(([key, value]) => {
+      if(key === id) { // impede a atualização do id
+        return
+      }
+      userExists[key] = value;
+    })
+
+    return userExists;
+  }
   
   /**
    * Verifica se o usuário já existe no banco de dados
@@ -30,4 +54,5 @@ export class UserRepository {
     const hasUser = this.users.findIndex(user => user.email === email)
     return hasUser !== -1;
   }
+
 }
