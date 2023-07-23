@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ProductEntity } from "./product.entity";
+import { UpdateProductDTO } from "./dto/UpdateProduct.dto";
 
 @Injectable()
 export class ProductRepository {
@@ -22,7 +23,7 @@ export class ProductRepository {
   }
   
 
-  async update(id: string, productData: Partial<ProductEntity>) {
+  async update(id: string, productData: UpdateProductDTO) {
     const dontChangeAttributes = ['id', 'usuarioId'];
     const product = this.findProductById(id);
     Object.entries(productData).forEach(([key, value]) => {
