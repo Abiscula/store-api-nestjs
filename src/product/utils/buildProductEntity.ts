@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { CreateProductDTO } from "../dto/CreateProduct.dto";
 import { ProductEntity } from "../product.entity";
 
@@ -9,6 +10,7 @@ import { ProductEntity } from "../product.entity";
 export function buildProductEntity(productData: CreateProductDTO): ProductEntity {
   const productEntity = new ProductEntity();
   
+  productEntity.id = randomUUID();
   productEntity.nome = productData.nome;
   productEntity.categoria = productData.categoria;
   productEntity.caracteristicas = productData.caracteristicas;
