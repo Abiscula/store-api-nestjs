@@ -1,5 +1,6 @@
 export class ProductEntity {
 
+  id: string;
   usuarioId: string;
   nome: string;
   valor: number;
