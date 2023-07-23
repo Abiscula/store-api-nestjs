@@ -20,4 +20,30 @@ export class ProductRepository {
   async list() {
     return this.products;
   }
+  
+
+  async update(id: string, productData: Partial<ProductEntity>) {
+    const dontChangeAttributes = ['id', 'usuarioId'];
+    const product = this.findProductById(id);
+    Object.entries(productData).forEach(([key, value]) => {
+      if (dontChangeAttributes.includes(key)) {
+        return;
+      }
+      product[key] = value;
+    });
+
+    return product;
+  }
+
+
+  private findProductById(id: string): ProductEntity {
+    const userExists = this.products.find(
+      savedUser => savedUser.id === id
+    );
+    if(!userExists) {
+      throw new Error('Usuário não encontrado')
+    }
+  
+    return userExists;
+  }
 }

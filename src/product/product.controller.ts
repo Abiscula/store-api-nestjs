@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
 import { ProductRepository } from "./product.repository";
 import { CreateProductDTO } from "./dto/CreateProduct.dto";
 import { ProductEntity } from "./product.entity";
 import { buildProductEntity } from "./utils/buildProductEntity";
+import { UpdateProductDTO } from "./dto/UpdateProduct.dto";
 
 @Controller('/products')
 export class ProductController {
@@ -18,7 +19,8 @@ export class ProductController {
     const productEntity: ProductEntity = buildProductEntity(productData);
     this.productRepository.save(productEntity);
     
-    return { 
+    return {
+      id: productEntity.id,
       nome: productEntity.nome,
       descricao: productEntity.descricao,
       valor: productEntity.valor,
@@ -27,9 +29,29 @@ export class ProductController {
     };
   }
 
+  /**
+   * Lista todos os produtos
+   * @returns 
+   */
   @Get()
   async listProducts() {
     return this.productRepository.list();
+  }
+
+
+  /**
+   * Atualiza o produto com base no id informado
+   * @param id: id do produto que será atualizado
+   * @param newProductData: dados que serão atualizados
+   * @returns produto atualizado
+   */
+  @Put('/update/:id')
+  async updateProduct(@Param('id') id: string, @Body() newProductData: UpdateProductDTO) {
+    const updatedProduct = await this.productRepository.update(id, newProductData);
+    return {
+      product: updatedProduct,
+      message: 'Produto atualizado com sucesso!'
+    }
   }
 
 }
