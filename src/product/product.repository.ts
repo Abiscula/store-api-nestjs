@@ -22,7 +22,12 @@ export class ProductRepository {
     return this.products;
   }
   
-
+  /**
+   * Atualiza o produto correspondente ao id informado
+   * @param id identificador do produto
+   * @param productData dados a serem atualizados
+   * @returns produto atualizado
+   */
   async update(id: string, productData: UpdateProductDTO) {
     const dontChangeAttributes = ['id', 'usuarioId'];
     const product = this.findProductById(id);
@@ -36,7 +41,21 @@ export class ProductRepository {
     return product;
   }
 
+  /**
+   * Remove o produto correspondente ao id informado
+   * @param id: id do produto que será removido
+   * @returns: produto removido
+   */
+  async delete(id: string) {
+    const removedProduct = this.findProductById(id);
+    this.products = this.products.filter((product) => product.id !== id);
+    return removedProduct;
+  }
 
+  /***
+  * Método criado para encontrar o produto baseado no id informado.
+  * Retorna um erro caso não encontre 
+  */
   private findProductById(id: string): ProductEntity {
     const userExists = this.products.find(
       savedUser => savedUser.id === id
