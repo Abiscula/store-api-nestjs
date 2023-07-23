@@ -1,4 +1,6 @@
-import { IsDateString, IsNotEmpty, MinLength, IsNumber, IsArray, isString, IsString, IsUUID } from "class-validator";
+import { IsDateString, IsNotEmpty, IsNumber, IsArray, IsString, IsUUID, Min, ArrayMinSize } from "class-validator";
+import { AttributesProductDTO, ImageProductDTO } from "./ListProduct.dto";
+import { Type } from "class-transformer";
 
 
 export class CreateProductDTO {
@@ -6,25 +8,33 @@ export class CreateProductDTO {
   @IsUUID(undefined, { message: 'ID de usuário inválido' })
   usuarioId: string;
 
-  @IsNotEmpty({ message: 'Nome não pode ser vazio' })  
+  @IsString()
+  @IsNotEmpty({ message: 'Nome do produto não pode ser vazio' })
   nome: string;
 
-  @IsNumber(undefined, { message: 'Valor deve ser um número válido' })
+  @IsNumber({ maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false })
+  @Min(1, { message: 'O valor precisa ser maior que zero' })
   valor: number;
-  
-  @IsNotEmpty({ message: 'quantidade não pode ser vazia, nula ou indefinida' }) 
+
+  @IsNumber()
+  @Min(0, { message: 'Quantidade mínima inválida' })
   quantidadeDisponivel: number;
 
-  @MinLength(10,{ message: 'A descrição precisa ter 10 ou mais caracteres' })
+  @IsString()
   descricao: string;
 
-  @IsArray({ message: 'Caracteristicas deve ser um array' })
-  caracteristicas: Array<object>;
+  @IsArray()
+  @ArrayMinSize(3)
+  @Type(() => AttributesProductDTO)
+  caracteristicas: AttributesProductDTO[];
 
-  @IsArray({ message: 'imagens deve ser um array' })
-  imagens: Array<object>;
+  @IsArray()
+  @ArrayMinSize(1)
+  @Type(() => ImageProductDTO)
+  imagens: ImageProductDTO[];
 
   @IsString()
+  @IsNotEmpty({ message: 'Categoria do produto não pode ser vazia' })
   categoria: string;
 
   @IsDateString()
