@@ -28,21 +28,28 @@ export class UserRepository {
    * @param data: dados para atualização
    */
   async update(id: string, newUserData: Partial<UserEntity>) {
-    const userExists = this.users.find(
-      savedUser => savedUser.id === id
-    );
-    if(!userExists) {
-      throw new Error('Usuário não encontrado')
-    }
+    const user = this.findUserById(id);
 
     Object.entries(newUserData).forEach(([key, value]) => {
       if(key === id) { // impede a atualização do id
         return
       }
-      userExists[key] = value;
+      user[key] = value;
     })
 
-    return userExists;
+    return user;
+  }
+
+  /**
+   * Remove o usuario 
+   * @param id: id do usuário
+   * @returns usuário removido
+   */
+  async delete(id: string) {
+    const user = this.findUserById(id);
+    this.users = this.users.filter(savedUser => savedUser.id !== id)
+
+    return user;
   }
   
   /**
@@ -53,6 +60,23 @@ export class UserRepository {
   findUserByEmail(email: string): boolean {
     const hasUser = this.users.findIndex(user => user.email === email)
     return hasUser !== -1;
+  }
+
+
+  /**
+   * Verifica se o usuário existe baseado no id
+   * @param id: identificador do usuário
+   * @returns usuário encontrado
+   */
+  private findUserById(id: string): UserEntity {
+    const userExists = this.users.find(
+      savedUser => savedUser.id === id
+    );
+    if(!userExists) {
+      throw new Error('Usuário não encontrado')
+    }
+  
+    return userExists;
   }
 
 }

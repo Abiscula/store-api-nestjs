@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, Param } from "@nestjs/common";
+import { Body, Controller, Get, Post, Put, Param, Delete } from "@nestjs/common";
 import { UserRepository } from "./user.repository";
 import { CreateUserDTO } from "./dto/CreateUser.dto";
 import { UserEntity } from "./user.entity";
@@ -52,13 +52,34 @@ export class UserController {
   async updateUser(@Param('id') id: string, @Body() newUserData: UpdateUserDTO) {
     const updatedUser = await this.userRepository.update(id, newUserData);
 
-    let newUser = {...updatedUser}
-    delete newUser.password
-
     return {
-      newUser,
+      user: this.removePasswordFromResponse(updatedUser),
       message: 'Usuário atualizado com sucesso!'
     }
+  }
+
+  /**
+   * Remove o usuário
+   */
+  @Delete('/delete/:id')
+  async removeUser(@Param('id') id: string) {
+    const removedUser = await this.userRepository.delete(id);
+
+    return {
+      user: this.removePasswordFromResponse(removedUser),
+      message: 'Usuário removido com sucesso!'
+    }
+  }
+
+  /**
+   * Remove a senha do retorno
+   * @param user: entidade de usuário
+   * @returns usuário sem senha
+   */
+  private removePasswordFromResponse(user: UserEntity) {
+    let userWithoutPassword = {...user}
+    delete userWithoutPassword.password
+    return userWithoutPassword;
   }
 
 }
